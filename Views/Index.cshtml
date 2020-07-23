@@ -1,5 +1,52 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
+@model ToDoListWebApp.ViewModels.TodoListViewModel
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO LIST</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body style="margin: 20px;">
+        
+        <h1>TODO LIST</h1>
+        <table class="table table-stripped table-bordered table-hover" style="max-width: 500px;">
+            <tr>
+                <td>
+                    @using (var form = Html.BeginForm("CreateUpdate", "Home", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(model => model.EditableItem.Id)
+                        <div class="input-group">
+                            @Html.HiddenFor(model => model.EditableItem.Title, new { @class = "form-control" })
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-sucess">@(Model.EditableItem.Id > 0 ? "Update" : "Add")</button>
+                            </div>
+                        </div>
+                        @Html.ValidationSummary()
+                    }
+                </td>
+               
+            </tr>
+            @foreach (var item in Model.TodoItems)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" checked="@item.isDone" onclick="window.location.href = '/Home/ToggleIsDone/@item.Id';"/>
+                        <a href="/Home/Edit/@item.Id">
+                            @item.Title
+                        </a>
+                    </td>
+                    <td class="text-right">
+                        @item.AddDate.ToShortDateString()
+                    </td>
+                    <td class="text-center">
+                        <a href="/Home/Delete/@item.Id" onclick="return confirm('Are you sure?');" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+    </table>
+</body>
+</html>
+
+
